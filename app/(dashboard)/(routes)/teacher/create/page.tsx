@@ -7,6 +7,8 @@ import {useForm} from "react-hook-form";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
 import {
     Form,
@@ -17,7 +19,6 @@ import {
     FormMessage,
     FormItem
 } from "@/components/ui/form";
-import Link from "next/link";
 
 const formSchema = z.object({
     title: z.string().min(1, {message: "Title is required"}),
@@ -35,11 +36,11 @@ const CreatePage = () => {
 
     const onSubmit = async (value: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.post("/api/course", value);
+            const response = await axios.post("/api/courses", value);
             router.push(`/teacher/courses/${response.data.id}`);
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
+            toast.success("Course created");
+        } catch {
+            toast.error("Error creating course");
         }
     }
 
