@@ -18,26 +18,27 @@ import {
     FormItem,
     FormMessage
 } from "@/components/ui/form"
+import { cn } from "@/lib/utils";
+import { Course } from "@prisma/client";
+import { Combobox } from "@/components/ui/combobox";
 
 
-interface TitleFormProps {
-    initialData: {
-        title: string;
-    };
+interface CategoryFormProps {
+    initialData: Course;
     courseId: string;
+    options: {label: string; value: string;}[];
 };
 
 const formSchema = z.object({
-    title: z.string().min(1, {
-        message: "Title is required"
-    }),
+    categoryId: z.string().min(1)
 });
 
-export const TitleForm = (
+export const CategoryForm = (
     {
         initialData,
-        courseId
-    }: TitleFormProps) => {
+        courseId,
+        options
+    }: CategoryFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const toggleEdit = () => {
@@ -46,7 +47,9 @@ export const TitleForm = (
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            categoryId: initialData?.categoryId || ""
+        }
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -63,24 +66,29 @@ export const TitleForm = (
         // console.log(values);
     }
 
+    const selectedOption = options.find((option) => option.value === initialData.categoryId);
+
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course title
+                Course category
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Edit title
+                            Edit category
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-sm mt-2">
-                    {initialData.title}
+                <p className={cn(
+                    "text-sm mt-2",
+                    !initialData.categoryId && "text-slate-500 italic"
+                )}>
+                    {selectedOption?.label || "No category selected"}
                 </p>
             )}
             {isEditing && (
@@ -91,14 +99,13 @@ export const TitleForm = (
                     >
                         <FormField 
                             control={form.control}
-                            name="title"
+                            name="categoryId"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input
-                                        disabled={isSubmitting}
-                                        placeholder="Edit title"
-                                        {...field}
+                                        <Combobox
+                                            options={...options}
+                                            {...field}
                                         />
                                     </FormControl>
                                     <FormMessage/>
