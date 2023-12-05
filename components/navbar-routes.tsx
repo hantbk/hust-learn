@@ -28,7 +28,7 @@ export const NavbarRoutes = () => {
                     <Button size = "sm" variant = "ghost" 
                         className="text-white hover:text-black"
                     >
-                        Teacher Mode
+                        Admin Mode
                     </Button>
                 </Link>
             )}
