@@ -14,7 +14,7 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 const ChapterIdPage = async ({
   params
 }: {
-  params: { courseId: string; chapterId: string }
+  params: { courseId: string; chapterId: string; videoUrl: string; }
 }) => {
   const { userId } = auth();
   
@@ -25,6 +25,7 @@ const ChapterIdPage = async ({
   const {
     chapter,
     course,
+    videoUrl,
     muxData,
     attachments,
     nextChapter,
@@ -34,15 +35,16 @@ const ChapterIdPage = async ({
     userId,
     chapterId: params.chapterId,
     courseId: params.courseId,
+    videoUrl: params.videoUrl,
   });
 
   if (!chapter || !course) {
     return redirect("/")
   }
 
-
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
+  const video = chapter.videoUrl || params.videoUrl;
 
   return ( 
     <div>
@@ -68,6 +70,7 @@ const ChapterIdPage = async ({
             playbackId={muxData?.playbackId!}
             isLocked={isLocked}
             completeOnEnd={completeOnEnd}
+            videoUrl={video}
           />
         </div>
         <div>

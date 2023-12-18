@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import {db} from "@/lib/db";
+import { isTeacher } from "@/lib/teacher";
 
 export async function POST(
     req: Request,

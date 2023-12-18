@@ -5,12 +5,14 @@ interface GetChapterProps {
   userId: string;
   courseId: string;
   chapterId: string;
+  videoUrl: string;
 };
 
 export const getChapter = async ({
   userId,
   courseId,
   chapterId,
+  videoUrl,
 }: GetChapterProps) => {
   try {
     const purchase = await db.purchase.findUnique({
@@ -36,6 +38,16 @@ export const getChapter = async ({
       where: {
         id: chapterId,
         isPublished: true,
+      }
+    });
+
+    const videoUrl = await db.chapter.findUnique({
+      where: {
+        id: chapterId,
+        courseId: courseId,
+      },
+      select: {
+        videoUrl: true,
       }
     });
 
@@ -93,12 +105,14 @@ export const getChapter = async ({
       nextChapter,
       userProgress,
       purchase,
+      videoUrl
     };
   } catch (error) {
     console.log("[GET_CHAPTER]", error);
     return {
       chapter: null,
       course: null,
+      videoUrl: null,
       muxData: null,
       attachments: [],
       nextChapter: null,

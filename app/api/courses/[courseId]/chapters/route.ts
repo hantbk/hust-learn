@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 
+
 export async function POST(
   req: Request,
   { params }: { params: { courseId: string } }
@@ -11,7 +12,7 @@ export async function POST(
     const { userId } = auth();
     const { title } = await req.json();
 
-    if (!userId) {
+    if (!userId ) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
