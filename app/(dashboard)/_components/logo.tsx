@@ -2,11 +2,16 @@ import Image from "next/image";
 
 export const Logo = () => {
     return (
-        <Image
-            height={180}
-            width={180}
+        <div className="flex w-full items-center justify-center">
+            <Image
+            height={80}
+            width={80}
             alt="logo"
-            src= "/logo.svg"
-        />
+            src= "/logo-web.svg"
+            />
+            <div className="text-3xl font-bold text-red-800 w-full ">
+                HUST Learn 
+            </div>
+        </div>
     )
 }
